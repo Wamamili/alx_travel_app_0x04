@@ -2,13 +2,16 @@ import os
 import environ
 from pathlib import Path
 
+# Build paths inside the project like this: BASE_DIR / 'subdir'.
+BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
 # Initialize environment variables
-env = environ.Env(DEBUG=(bool, False))
-environ.Env.read_env()
+env = environ.Env()
+environ.Env.read_env(os.path.join(BASE_DIR, '.env'))
 
-BASE_DIR = Path(__file__).resolve().parent.parent
-
+# SECURITY WARNING: keep the secret key used in production secret!
 SECRET_KEY = env('SECRET_KEY')
+
 DEBUG = env('DEBUG')
 ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['*'])
 
@@ -68,6 +71,7 @@ DATABASES = {
         'PORT': env('DB_PORT'),
     }
 }
+
 
 # CORS Configuration
 CORS_ALLOW_ALL_ORIGINS = True
