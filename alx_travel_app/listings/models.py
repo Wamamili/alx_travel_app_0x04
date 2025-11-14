@@ -36,8 +36,26 @@ class Review(models.Model):
 
     class Meta:
         constraints = [
-            models.CheckConstraint(check=models.Q(rating__gte=1) & models.Q(rating__lte=5), name='rating_range')
+            models.CheckConstraint(
+                check=models.Q(rating__gte=1) & models.Q(rating__lte=5),
+                name='rating_range'
+            )
         ]
 
     def __str__(self):
         return f"Review {self.rating}/5 by {self.reviewer_name}"
+
+
+class Payment(models.Model):
+    booking = models.ForeignKey(Booking, related_name='payments', on_delete=models.CASCADE)
+    amount = models.DecimalField(max_digits=10, decimal_places=2)
+    email = models.EmailField()
+    first_name = models.CharField(max_length=200)
+    last_name = models.CharField(max_length=200)
+    tx_ref = models.CharField(max_length=255, unique=True)
+    chapa_transaction_id = models.CharField(max_length=255, blank=True, null=True)
+    status = models.CharField(max_length=20, default='Pending')
+    created_at = models.DateTimeField(auto_now_add=True)
+
+    def __str__(self):
+        return f"Payment {self.tx_ref}"
