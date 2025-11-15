@@ -91,261 +91,177 @@ Requirements
 • drf-yasg or drf-spectacular for documentation
 
 Install dependencies:
+# ALX Travel App
 
+API service for managing travel property listings, bookings, reviews and payments.
+
+This repository contains a Django REST Framework application that models a simple travel marketplace and includes:
+- Listings (properties)
+- Bookings (reservations)
+- Reviews
+- Payments (Chapa integration)
+- Background tasks (Celery + RabbitMQ)
+
+---
+
+**Features**
+
+- **Listings**: CRUD endpoints for properties with price and availability.
+- **Bookings**: Create bookings tied to listings; calculates total price.
+- **Reviews**: Ratings (1-5) and comments validated at the DB level.
+- **Payments**: Payment initiation and verification via Chapa; `Payment` model tracks status.
+- **Background Tasks**: Asynchronous emails and periodic jobs using Celery + RabbitMQ.
+- **Auto API Docs**: Swagger/OpenAPI UI exposed for easy exploration.
+
+---
+
+**Quick Start (Local development)**
+
+- **Requirements**: `Python 3.10+`
+- Install dependencies:
+
+```bash
 pip install -r requirements.txt
+```
 
-Running the Project
+- Copy the example environment file and update values:
 
-Apply migrations:
+```bash
+cp .env.example .env
+# edit .env and fill in SECRET_KEY, DB credentials, etc.
+```
 
+- Apply migrations and create a superuser:
+
+```bash
 python manage.py migrate
+python manage.py createsuperuser
+```
 
+- Run the development server:
 
-Start server:
-
+```bash
 python manage.py runserver
+```
 
-API Documentation
+- Visit the API docs:
 
-Swagger UI is available at:
+```
+http://127.0.0.1:8000/swagger/
+```
 
-/swagger/
+---
 
+**Project Structure (high level)**
 
-Redoc:
+- `alx_travel_app/` — Project settings and WSGI/Celery configuration
+- `listings/` — App: models, views, serializers, urls, tasks, management commands
+- `requirements.txt` — Pinned dependencies
+- `Procfile`, `runtime.txt` — Deployment helpers
+- `README.md` — This file
 
-/redoc/
+---
 
+**Environment Variables (.env)**
 
-Ensure you added API docs in your main urls.py:
+- `SECRET_KEY` — Django secret key
+- `DEBUG` — `True`/`False`
+- `DB_ENGINE`, `DB_NAME`, `DB_USER`, `DB_PASSWORD`, `DB_HOST`, `DB_PORT` — DB config
+- `ALLOWED_HOSTS` — comma-separated host list
+- `EMAIL_*` — SMTP configuration
+- `CELERY_BROKER_URL` — e.g. `amqp://user:pass@rabbit-host:5672//`
+- `CELERY_RESULT_BACKEND` — e.g. `redis://localhost:6379/0`
+- `CHAPA_SECRET_KEY` — payment provider secret
 
-path('swagger/', schema_view.with_ui('swagger')),
+Refer to `.env.example` for full list.
 
-Milestone Summary
-Milestone 1
+---
 
-Project setup, database configuration, initial Listing model.
+**Celery & Background Tasks**
 
-Milestone 2
+- Start a Celery worker locally:
 
-Added Booking and Review models, API routes, and validation.
+```bash
+celery -A alx_travel_app worker -l info
+```
 
-Milestone 3
+- Start Celery Beat (periodic tasks):
 
-Integrated Payment model
-Linked payments to bookings
-Enforced unique constraints
-Added payment-related API endpoints
+```bash
+celery -A alx_travel_app beat -l info
+```
 
+- Useful tasks are defined in `listings/tasks.py` (`send_booking_confirmation_email`, `send_booking_reminders`, `cleanup_old_bookings`).
 
+Note: On PythonAnywhere you must use a paid account to enable RabbitMQ and long-running background workers.
 
+---
 
+**API Endpoints (examples)**
 
-alx_travel_app
+- Listings
+  - `GET /api/listings/`
+  - `POST /api/listings/`
+  - `GET /api/listings/{id}/`
+  - `PUT /api/listings/{id}/`
+  - `DELETE /api/listings/{id}/`
 
-Project Overview
-alx_travel_app is a Django REST Framework project for managing listings, bookings, customer reviews, payments, and automated email confirmations. The application mirrors the workflow of real travel and accommodation platforms by integrating payments, background tasks, and API documentation.
+- Bookings
+  - `GET /api/bookings/`
+  - `POST /api/bookings/`
+  - `GET /api/bookings/{id}/`
 
-Technologies
-Django
-Django REST Framework
-PostgreSQL
-Chapa Payments API
-Celery
-RabbitMQ
-SMTP Email Backend
-drf-spectacular for API documentation
+- Payments
+  - `POST /api/payments/initialize/`
+  - `GET  /api/payments/verify/?tx_ref=...`
 
-Project Structure
-alx_travel_app
-listings
-models.py
-views.py
-urls.py
-serializers.py
-tasks.py
-alx_travel_app
-settings.py
-celery.py
-README.md
+- Reviews
+  - `GET /api/listings/{id}/reviews/`
+  - `POST /api/reviews/`
 
-Milestone Summary
+---
 
-Milestone 1
-Project setup, database configuration, initial Listing model.
+**Deployment (PythonAnywhere)**
 
-Milestone 2
-Added Booking and Review models, API routes, and validation.
+1. Create a paid PythonAnywhere account (RabbitMQ & background workers require paid plan).
+2. Clone repo to your PythonAnywhere home directory.
+3. Create a virtualenv and install `requirements.txt`.
+4. Configure `.env` with DB and RabbitMQ credentials.
+5. Run migrations and `collectstatic`.
+6. Configure WSGI using `wsgi_pythonanywhere.py` (update path and username).
+7. Add background tasks in the PythonAnywhere **Tasks** tab to run Celery worker and Beat.
 
-Milestone 3
-Integrated Payment model
-Linked payments to bookings
-Enforced unique constraints
-Added payment-related API endpoints
+See `PYTHONANYWHERE_DEPLOYMENT.md` and `CELERY_RABBITMQ_SETUP.md` for step-by-step instructions and troubleshooting.
 
-Milestone 4
-Integrated Chapa API for payment initiation and verification.
-Added payment workflow including pending, completed, and failed statuses.
-Linked transactions to bookings.
-Tested sandbox payment flows.
+---
 
-Milestone 5
-Added Celery and RabbitMQ for background task processing.
-Implemented asynchronous booking confirmation emails.
-Updated BookingViewSet to trigger email tasks on creation.
-Verified email sending using Celery workers and SMTP backend.
+**Testing & CI**
 
-Models Overview
+- Use the provided management command `test_celery` to validate Celery tasks (if worker is running).
+- Run unit tests with:
 
-Listing
-title
-description
-location
-price_per_night
-available
-created_at
-updated_at
+```bash
+python manage.py test
+```
 
-Booking
-listing (ForeignKey)
-customer_name
-customer_email
-check_in
-check_out
-total_price
-booked_at
+---
 
-Review
-listing (ForeignKey)
-reviewer_name
-rating
-comment
-created_at
+**Contributing**
 
-Payment
-booking (OneToOneField)
-amount
-transaction_id
-status (Pending, Completed, Failed)
-created_at
+- Fork the repository and open PRs against `main`.
+- Follow the existing code style and add tests for new features.
 
-Payment Workflow Summary
+---
 
-User creates a booking.
+**License**
 
-System initiates payment by contacting Chapa API.
+This project is provided as-is for learning and demonstration purposes. Add an appropriate license if you plan to publish or share the code publicly.
 
-Transaction ID is stored with status Pending.
+---
 
-User completes payment through Chapa’s checkout link.
+If you'd like, I can also:
 
-System verifies payment via Chapa verification endpoint.
+- Add badges (build / coverage)
+- Wire up a GitHub Actions workflow for tests and lint
+- Add HTML email templates and webhook handlers for Chapa
 
-Status is updated to Completed or Failed.
-
-On success, a Celery task sends a confirmation email.
-
-API Documentation (Swagger and Redoc)
-
-API documentation is automatically generated using drf-spectacular.
-
-Setup in settings.py
-SPECTACULAR_SETTINGS = {
-'TITLE': 'ALX Travel App API',
-'DESCRIPTION': 'API documentation for listings, bookings, reviews, and payments.',
-'VERSION': '1.0.0'
-}
-
-Routes in project urls.py
-from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView, SpectacularRedocView
-
-urlpatterns = [
-path('api/schema/', SpectacularAPIView.as_view(), name='schema'),
-path('api/docs/', SpectacularSwaggerView.as_view(url_name='schema')),
-path('api/redoc/', SpectacularRedocView.as_view(url_name='schema')),
-]
-
-Swagger URL
-/api/docs/
-
-Redoc URL
-/api/redoc/
-
-Celery Background Task Setup
-
-Celery Configuration (celery.py)
-from celery import Celery
-import os
-
-os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'alx_travel_app.settings')
-app = Celery('alx_travel_app')
-app.config_from_object('django.conf:settings', namespace='CELERY')
-app.autodiscover_tasks()
-
-Celery Worker Command
-celery -A alx_travel_app worker --loglevel=info
-
-RabbitMQ Start Command
-sudo systemctl start rabbitmq-server
-
-Email Task (listings/tasks.py)
-A shared task sends booking confirmation emails asynchronously.
-
-Trigger Point
-BookingViewSet calls send_booking_confirmation_email.delay() after creating a booking.
-
-Running the Project
-
-Install dependencies
-pip install -r requirements.txt
-
-Start RabbitMQ
-sudo systemctl start rabbitmq-server
-
-Run Celery worker
-celery -A alx_travel_app worker --loglevel=info
-
-Run Django server
-python manage.py runserver
-
-Testing
-
-Use Postman or Thunder Client to test all endpoints:
-GET, POST, PUT, DELETE for:
-Listings
-Bookings
-Reviews
-Payments initiation
-Payment verification
-
-Test Swagger documentation at:
-http://127.0.0.1:8000/api/docs/
-
-Endpoints Overview
-
-Listings
-GET /api/listings/
-POST /api/listings/
-GET /api/listings/<id>/
-PUT /api/listings/<id>/
-DELETE /api/listings/<id>/
-
-Bookings
-GET /api/bookings/
-POST /api/bookings/
-PUT /api/bookings/<id>/
-DELETE /api/bookings/<id>/
-
-Payments
-POST /api/payments/initiate/
-GET /api/payments/verify/<transaction_id>/
-
-Reviews
-GET /api/reviews/
-POST /api/reviews/
-
-Next Steps
-Add email templates for HTML-based booking confirmations.
-Add webhook support for Chapa payment callbacks.
-Implement rate limiting and throttling for API protection.
-Deploy using Render or PythonAnywhere with worker processes.
