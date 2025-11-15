@@ -128,13 +128,40 @@ EMAIL_HOST_USER = env('EMAIL_HOST_USER', default='')
 EMAIL_HOST_PASSWORD = env('EMAIL_HOST_PASSWORD', default='')
 EMAIL_USE_TLS = env.bool('EMAIL_USE_TLS', default=True)
 
-# Celery Configuration (for async tasks - requires paid PythonAnywhere account)
-CELERY_BROKER_URL = env('CELERY_BROKER_URL', default='')
-CELERY_RESULT_BACKEND = env('CELERY_RESULT_BACKEND', default='')
+# Celery Configuration for RabbitMQ (PythonAnywhere Paid Account)
+# Broker URL format: amqp://username:password@hostname:port/vhost
+CELERY_BROKER_URL = env(
+    'CELERY_BROKER_URL',
+    default='amqp://guest:guest@localhost:5672//'  # Local development
+)
+CELERY_RESULT_BACKEND = env(
+    'CELERY_RESULT_BACKEND',
+    default='redis://localhost:6379/0'  # Redis for result backend
+)
+
+# Celery settings
 CELERY_ACCEPT_CONTENT = ['json']
 CELERY_TASK_SERIALIZER = 'json'
 CELERY_RESULT_SERIALIZER = 'json'
 CELERY_TIMEZONE = 'UTC'
+CELERY_TASK_TRACK_STARTED = True
+CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
+CELERY_TASK_SOFT_TIME_LIMIT = 25 * 60  # 25 minutes
+
+# Celery Beat Schedule (Periodic Tasks)
+from celery.schedules import crontab
+CELERY_BEAT_SCHEDULE = {
+    # Example: Clean up old bookings daily at 2 AM UTC
+    'cleanup-old-bookings': {
+        'task': 'listings.tasks.cleanup_old_bookings',
+        'schedule': crontab(hour=2, minute=0),  # 2 AM daily
+    },
+    # Example: Send pending booking reminders every hour
+    'send-booking-reminders': {
+        'task': 'listings.tasks.send_booking_reminders',
+        'schedule': crontab(minute=0),  # Every hour
+    },
+}
 
 # Chapa Payment Gateway
 CHAPA_SECRET_KEY = env('CHAPA_SECRET_KEY', default='')
