@@ -12,7 +12,7 @@
 2. Clone your GitHub repository:
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/alx_travel_app_0x04.git
+git clone https://github.com/wamamili/alx_travel_app_0x04.git
 cd alx_travel_app_0x04/alx_travel_app
 ```
 
