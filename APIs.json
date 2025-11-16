@@ -1,0 +1,196 @@
+HTTP 200 OK
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+[
+    {
+        "id": 3,
+        "title": "City Lights Apartment",
+        "description": "Modern apartment in Nairobi CBD.",
+        "location": "Nairobi",
+        "price_per_night": "75.00",
+        "available": true,
+        "created_at": "2025-11-14T02:46:31.638638-06:00",
+        "updated_at": "2025-11-14T02:46:31.638803-06:00",
+        "bookings": [
+            {
+                "id": 5,
+                "listing": 3,
+                "listing_title": "City Lights Apartment",
+                "customer_name": "Customer 1",
+                "customer_email": "customer1@example.com",
+                "check_in": "2025-11-21",
+                "check_out": "2025-11-24",
+                "total_price": "225.00",
+                "booked_at": "2025-11-14T02:46:31.671381-06:00"
+            },
+            {
+                "id": 6,
+                "listing": 3,
+                "listing_title": "City Lights Apartment",
+                "customer_name": "Customer 2",
+                "customer_email": "customer2@example.com",
+                "check_in": "2025-11-15",
+                "check_out": "2025-11-19",
+                "total_price": "300.00",
+                "booked_at": "2025-11-14T02:46:31.673753-06:00"
+            }
+        ],
+        "reviews": [
+            {
+                "id": 7,
+                "reviewer_name": "Reviewer 1",
+                "rating": 4,
+                "comment": "This is review 1 for City Lights Apartment.",
+                "created_at": "2025-11-14T02:46:31.676532-06:00"
+            },
+            {
+                "id": 8,
+                "reviewer_name": "Reviewer 2",
+                "rating": 4,
+                "comment": "This is review 2 for City Lights Apartment.",
+                "created_at": "2025-11-14T02:46:31.679118-06:00"
+            },
+            {
+                "id": 9,
+                "reviewer_name": "Reviewer 3",
+                "rating": 4,
+                "comment": "This is review 3 for City Lights Apartment.",
+                "created_at": "2025-11-14T02:46:31.681582-06:00"
+            }
+        ]
+    },
+    {
+        "id": 2,
+        "title": "Mountain Retreat",
+        "description": "Peaceful cabin in the hills.",
+        "location": "Nanyuki",
+        "price_per_night": "90.00",
+        "available": true,
+        "created_at": "2025-11-14T02:46:31.633883-06:00",
+        "updated_at": "2025-11-14T02:46:31.633922-06:00",
+        "bookings": [
+            {
+                "id": 3,
+                "listing": 2,
+                "listing_title": "Mountain Retreat",
+                "customer_name": "Customer 1",
+                "customer_email": "customer1@example.com",
+                "check_in": "2025-11-24",
+                "check_out": "2025-11-26",
+                "total_price": "180.00",
+                "booked_at": "2025-11-14T02:46:31.658154-06:00"
+            },
+            {
+                "id": 4,
+                "listing": 2,
+                "listing_title": "Mountain Retreat",
+                "customer_name": "Customer 2",
+                "customer_email": "customer2@example.com",
+                "check_in": "2025-11-19",
+                "check_out": "2025-11-24",
+                "total_price": "450.00",
+                "booked_at": "2025-11-14T02:46:31.660653-06:00"
+            }
+        ],
+        "reviews": [
+            {
+                "id": 4,
+                "reviewer_name": "Reviewer 1",
+                "rating": 4,
+                "comment": "This is review 1 for Mountain Retreat.",
+                "created_at": "2025-11-14T02:46:31.663250-06:00"
+            },
+            {
+                "id": 5,
+                "reviewer_name": "Reviewer 2",
+                "rating": 4,
+                "comment": "This is review 2 for Mountain Retreat.",
+                "created_at": "2025-11-14T02:46:31.665724-06:00"
+            },
+            {
+                "id": 6,
+                "reviewer_name": "Reviewer 3",
+                "rating": 4,
+                "comment": "This is review 3 for Mountain Retreat.",
+                "created_at": "2025-11-14T02:46:31.668393-06:00"
+            }
+        ]
+    },
+    {
+        "id": 1,
+        "title": "Beachfront Paradise",
+        "description": "A stunning beachside villa.",
+        "location": "Mombasa",
+        "price_per_night": "120.00",
+        "available": true,
+        "created_at": "2025-11-14T02:46:31.626769-06:00",
+        "updated_at": "2025-11-14T02:46:31.626930-06:00",
+        "bookings": [
+            {
+                "id": 1,
+                "listing": 1,
+                "listing_title": "Beachfront Paradise",
+                "customer_name": "Customer 1",
+                "customer_email": "customer1@example.com",
+                "check_in": "2025-11-17",
+                "check_out": "2025-11-19",
+                "total_price": "240.00",
+                "booked_at": "2025-11-14T02:46:31.641646-06:00"
+            },
+            {
+                "id": 2,
+                "listing": 1,
+                "listing_title": "Beachfront Paradise",
+                "customer_name": "Customer 2",
+                "customer_email": "customer2@example.com",
+                "check_in": "2025-11-15",
+                "check_out": "2025-11-18",
+                "total_price": "360.00",
+                "booked_at": "2025-11-14T02:46:31.644552-06:00"
+            }
+        ],
+        "reviews": [
+            {
+                "id": 1,
+                "reviewer_name": "Reviewer 1",
+                "rating": 5,
+                "comment": "This is review 1 for Beachfront Paradise.",
+                "created_at": "2025-11-14T02:46:31.648085-06:00"
+            },
+            {
+                "id": 2,
+                "reviewer_name": "Reviewer 2",
+                "rating": 5,
+                "comment": "This is review 2 for Beachfront Paradise.",
+                "created_at": "2025-11-14T02:46:31.650596-06:00"
+            },
+            {
+                "id": 3,
+                "reviewer_name": "Reviewer 3",
+                "rating": 4,
+                "comment": "This is review 3 for Beachfront Paradise.",
+                "created_at": "2025-11-14T02:46:31.655955-06:00"
+            }
+        ]
+    }
+]
+
+HTTP 201 Created
+Allow: GET, POST, HEAD, OPTIONS
+Content-Type: application/json
+Vary: Accept
+
+{
+    "id": 4,
+    "title": "Lake View Cottage",
+    "description": "Quiet retreat by the lake",
+    "location": "Naivasha",
+    "price_per_night": "85.00",
+    "available": true,
+    "created_at": "2025-11-14T02:56:50.089639-06:00",
+    "updated_at": "2025-11-14T02:56:50.089677-06:00",
+    "bookings": [],
+    "reviews": []
+}
