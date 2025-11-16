@@ -2,6 +2,7 @@ import os
 from pathlib import Path
 import environ
 from celery.schedules import crontab
+import dj_database_url
 
 # ============================================================================
 # Django Settings for ALX Travel App
@@ -82,6 +83,7 @@ DATABASES = {
     'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
 }
 
+DATABASES['default'] = dj_database_url.parse('postgresql://alx_travel_db_kai0_user:Uwe8vlrYDvGJk0EhCaEleFUOGuVAsWi3@dpg-d4d1ahripnbc739p6qk0-a.oregon-postgres.render.com/alx_travel_db_kai0')
 # ============================================================================
 # PASSWORD VALIDATION
 # ============================================================================
