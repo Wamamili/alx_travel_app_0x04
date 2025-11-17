@@ -116,7 +116,7 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 CORS_ALLOW_ALL_ORIGINS = env.bool('CORS_ALLOW_ALL_ORIGINS', default=False)
 CORS_ALLOWED_ORIGINS = env.list('CORS_ALLOWED_ORIGINS', default=[
     'http://localhost:3000',
-    'https://alx-travel-app.onrender.com'
+    'https://alx_travel_app.onrender.com'
 ])
 
 REST_FRAMEWORK = {
