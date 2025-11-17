@@ -11,6 +11,7 @@ psycopg2-binary==2.9.9
 MySQLdb==2.2.0
 python-decouple==3.8
 requests==2.31.0
+dj-database-url==1.2.0
 
 
 
