@@ -23,7 +23,7 @@ if env_file.exists():
 # ============================================================================
 SECRET_KEY = env('SECRET_KEY', default='change-me-in-production')
 DEBUG = env('DEBUG', default=False)
-ALLOWED_HOSTS = env.list('ALLOWED_HOSTS', default=['127.0.0.1', 'localhost', 'alx-travel-app.onrender.com'])
+ALLOWED_HOSTS = env('ALLOWED_HOSTS').split(',')
 
 # ============================================================================
 # INSTALLED APPS & MIDDLEWARE
@@ -79,11 +79,8 @@ WSGI_APPLICATION = 'alx_travel_app.wsgi.application'
 # ============================================================================
 # DATABASE
 # ============================================================================
-DATABASES = {
-    'default': env.db('DATABASE_URL', default=f'sqlite:///{BASE_DIR / "db.sqlite3"}')
-}
-
-DATABASES['default'] = dj_database_url.parse('postgresql://alx_travel_db_kai0_user:Uwe8vlrYDvGJk0EhCaEleFUOGuVAsWi3@dpg-d4d1ahripnbc739p6qk0-a.oregon-postgres.render.com/alx_travel_db_kai0')
+DATABASES = {}
+DATABASES['default'] = dj_database_url.parse(env('DATABASE_URL'))
 # ============================================================================
 # PASSWORD VALIDATION
 # ============================================================================
@@ -162,6 +159,36 @@ CELERY_TIMEZONE = 'UTC'
 CELERY_TASK_TRACK_STARTED = True
 CELERY_TASK_TIME_LIMIT = 30 * 60  # 30 minutes
 CELERY_TASK_SOFT_TIME_LIMIT = 25 * 60  # 25 minutes
+
+import ast
+import ssl
+
+# Read optional SSL options for Celery broker/result backend from env.
+# Provide a Python literal dict in `.env` like: CELERY_BROKER_USE_SSL={"ssl_cert_reqs": None}
+# This will be converted to a Python dict and mapped to ssl constants where appropriate.
+
+def _parse_ssl_env(varname):
+    raw = env(varname, default='')
+    if not raw:
+        return None
+    try:
+        parsed = ast.literal_eval(raw)
+    except Exception:
+        return None
+    if isinstance(parsed, dict) and 'ssl_cert_reqs' in parsed:
+        v = parsed['ssl_cert_reqs']
+        if isinstance(v, str):
+            if v == 'CERT_NONE':
+                parsed['ssl_cert_reqs'] = ssl.CERT_NONE
+            elif v == 'CERT_OPTIONAL':
+                parsed['ssl_cert_reqs'] = ssl.CERT_OPTIONAL
+            elif v == 'CERT_REQUIRED':
+                parsed['ssl_cert_reqs'] = ssl.CERT_REQUIRED
+        # allow None as-is
+    return parsed
+
+CELERY_BROKER_USE_SSL = _parse_ssl_env('CELERY_BROKER_USE_SSL')
+CELERY_RESULT_BACKEND_USE_SSL = _parse_ssl_env('CELERY_RESULT_BACKEND_USE_SSL')
 
 # Celery Beat Schedule (periodic tasks)
 CELERY_BEAT_SCHEDULE = {
